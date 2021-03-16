@@ -122,10 +122,14 @@ async def _log_requests_middleware(request: Request, call_next):
 
 
 def setup_logging(**kwargs):
-    """Wrapper around structlog.configure, to add merge_contextvar."""
+    """Wrapper around structlog.configure, to add merge_contextvar.
+
+    NOTE: When using this you must yourself register a key-value processor.
+    """
     processors = kwargs.get("processors", [])
     if merge_contextvars not in processors:
-        processors.append(merge_contextvars)
+        # We prepend, as merge_contextvars must come before the key-value processor.
+        processors.insert(0, merge_contextvars)
     kwargs["processors"] = processors
 
     structlog.configure(**kwargs)
