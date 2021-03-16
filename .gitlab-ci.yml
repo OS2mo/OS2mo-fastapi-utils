@@ -57,7 +57,7 @@ REUSE compliance:
 
 .test-default: &test-default
   stage: test
-  needs: ["Build Image"]
+  needs: []
   services: []
   before_script:
     - pip3 install -e .[test]
