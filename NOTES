@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: Magenta ApS
+#
+# SPDX-License-Identifier: MPL-2.0
+
+Add REUSE headers to new files with:
+```
+reuse addheader --copyright-style spdx --copyright "Magenta ApS" --license MPL-2.0 --exclude-year FILENAME
+```

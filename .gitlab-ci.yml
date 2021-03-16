@@ -1,0 +1,116 @@
+# SPDX-FileCopyrightText: Magenta ApS
+#
+# SPDX-License-Identifier: MPL-2.0
+
+################################################################################
+# Changes to this file requires approval from Labs. Please add a person from   #
+# Labs as required approval to your MR if you have any changes.                #
+################################################################################
+
+# For `docker push` to work, the following envionment variables have to set in
+# the Gitlab UI.
+# RELEASE_REGISTRY_USER
+# RELEASE_REGISTRY_PASSWORD
+
+stages:
+  - lint
+  - test
+  - release
+  - deploy
+
+# Lint stage
+#############
+
+.lint-default: &lint-default
+  stage: lint
+  needs: []
+  image: python:3.7
+  services: []
+  tags:
+    - docker
+
+TypeCheck Python:
+  <<: *lint-default
+  before_script:
+    - pip3 install -e .[lint]
+  script:
+    - python -m mypy --ignore-missing-imports --strict-optional --no-implicit-optional os2mo_fastapi_utils tests
+
+Lint Python:
+  <<: *lint-default
+  before_script:
+    - pip3 install -e .[lint]
+  script:
+    - python -m black --diff --check os2mo_fastapi_utils tests
+    - python -m isort --profile black --diff --check-only os2mo_fastapi_utils
+
+REUSE compliance:
+  <<: *lint-default
+  image:
+    name: fsfe/reuse:latest
+    entrypoint: [""]
+  script:
+    - reuse lint
+
+# Test stage
+############
+
+.test-default: &test-default
+  stage: test
+  needs: ["Build Image"]
+  services: []
+  before_script:
+    - pip3 install -e .[test]
+  tags:
+    - docker
+
+Unit-test:
+  <<: *test-default
+  image: python:3.7
+  script:
+    - pytest
+      --cov=app
+      --junitxml $CI_PROJECT_DIR/junit.xml
+      --cov-report html:$CI_PROJECT_DIR/coverage-html
+      --cov-report term
+      -p no:cacheprovider
+      --color=yes
+      tests/
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/coverage-html
+    reports:
+      junit: $CI_PROJECT_DIR/junit.xml
+
+
+# Release stage
+###############
+
+.release-default: &release-default
+  stage: release
+  needs: ["Unit-test"]
+  image: python:3.7
+  services: []
+  before_script:
+    - pip3 install -e .[dist]
+    - python3 -m build
+  tags:
+    - docker
+
+
+Release dev:
+  <<: *release-default
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "development"
+  script:
+    - python3 -m twine upload --repository testpypi dist/*
+
+Release master:
+  <<: *release-default
+  rules:
+      # Matches <version core> from SemVer 2.0.0 BNF grammar. Ex. 2.3.4, but not 2.3.4-rc
+      - if: $CI_COMMIT_TAG =~ /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/
+  script:
+    - python3 -m twine upload dist/*
