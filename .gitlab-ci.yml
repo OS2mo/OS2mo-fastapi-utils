@@ -69,7 +69,7 @@ Unit-test:
   image: python:3.7
   script:
     - pytest
-      --cov=app
+      --cov=os2mo_fastapi_utils
       --junitxml $CI_PROJECT_DIR/junit.xml
       --cov-report html:$CI_PROJECT_DIR/coverage-html
       --cov-report term
