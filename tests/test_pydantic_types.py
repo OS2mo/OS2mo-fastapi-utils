@@ -21,7 +21,7 @@ class TypeTests(TestCase):
     def test_create_port(self):
         port = Port(80)
         self.assertEqual(repr(port), "Port(80)")
-        self.assertEqual(str(port), "Port(80)")
+        self.assertEqual(str(port), "80")
 
         other_port = Port(80)
         self.assertEqual(port, other_port)
