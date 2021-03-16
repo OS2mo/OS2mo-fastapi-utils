@@ -1,1 +1,3 @@
-from .sd_connector import SDConnector
+# SPDX-FileCopyrightText: Magenta ApS
+#
+# SPDX-License-Identifier: MPL-2.0

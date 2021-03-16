@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Magenta ApS
+#
+# SPDX-License-Identifier: MPL-2.0
+
 [build-system]
 requires = [
     "setuptools>=42",
