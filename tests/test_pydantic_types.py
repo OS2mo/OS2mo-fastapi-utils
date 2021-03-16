@@ -6,7 +6,7 @@ from unittest import TestCase
 
 from pydantic import BaseModel, ValidationError
 
-from app.pydantic_types import Port, Domain
+from os2mo_fastapi_utils.pydantic_types import Port, Domain
 
 
 class PortModel(BaseModel):
@@ -18,7 +18,6 @@ class DomainModel(BaseModel):
 
 
 class TypeTests(TestCase):
-
     def test_create_port(self):
         port = Port(80)
         self.assertEqual(repr(port), "Port(80)")
