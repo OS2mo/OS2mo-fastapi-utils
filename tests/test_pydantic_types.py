@@ -6,7 +6,7 @@ from unittest import TestCase
 
 from pydantic import BaseModel, ValidationError
 
-from os2mo_fastapi_utils.pydantic_types import Port, Domain
+from os2mo_fastapi_utils.pydantic_types import Domain, Port
 
 
 class PortModel(BaseModel):
