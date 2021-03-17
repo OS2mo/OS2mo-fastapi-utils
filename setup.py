@@ -1,4 +1,3 @@
-# Copyright (c) 2017, Magenta ApS
 # SPDX-FileCopyrightText: Magenta ApS
 #
 # SPDX-License-Identifier: MPL-2.0

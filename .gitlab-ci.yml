@@ -42,7 +42,7 @@ Lint Python:
     - pip3 install -e .[lint]
   script:
     - python -m black --diff --check os2mo_fastapi_utils tests
-    - python -m isort --profile black --diff --check-only os2mo_fastapi_utils
+    - python -m isort --profile black --diff --check-only os2mo_fastapi_utils tests
 
 REUSE compliance:
   <<: *lint-default
