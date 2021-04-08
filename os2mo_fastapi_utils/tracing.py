@@ -14,7 +14,7 @@ from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrument
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchExportSpanProcessor
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pydantic import BaseSettings, HttpUrl
 from pydantic.tools import parse_obj_as
 from structlog import get_logger
@@ -51,7 +51,7 @@ def setup_instrumentation(app):
             agent_port=settings.jaeger_port,
         )
 
-        _TRACE_PROVIDER.add_span_processor(BatchExportSpanProcessor(_JAEGER_EXPORTER))
+        _TRACE_PROVIDER.add_span_processor(BatchSpanProcessor(_JAEGER_EXPORTER))
 
     AioHttpClientInstrumentor().instrument()
     RequestsInstrumentor().instrument()
