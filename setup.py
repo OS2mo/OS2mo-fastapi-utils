@@ -42,6 +42,8 @@ setuptools.setup(
         'test': [
             'pytest',
             'pytest-cov',
+            'requests',
+            'aiohttp'
         ],
         'dist': [
             'build',
