@@ -34,7 +34,7 @@ TypeCheck Python:
   before_script:
     - pip3 install -e .[lint]
   script:
-    - python -m mypy --ignore-missing-imports --strict-optional --no-implicit-optional os2mo_fastapi_utils tests
+    - python -m mypy --ignore-missing-imports --strict-optional --no-implicit-optional --namespace-packages os2mo_fastapi_utils tests
 
 Lint Python:
   <<: *lint-default
