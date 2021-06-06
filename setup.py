@@ -9,7 +9,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="os2mo-fastapi-utils",
-    version="0.0.2",
+    version="0.0.3",
     author="Magenta ApS",
     author_email="info@magenta.dk",
     description="Utility library with various reusable FastAPI components",
