@@ -9,10 +9,11 @@ from uuid import UUID
 import structlog
 from fastapi import Request, Response
 from opentelemetry import trace
-from opentelemetry.exporter import jaeger
+from opentelemetry.exporter.jaeger.thrift import JaegerExporter
 from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrumentor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pydantic import BaseSettings, HttpUrl
@@ -41,12 +42,13 @@ def _get_settings(**overrides) -> TracingSettings:
 def setup_instrumentation(app):
     settings: TracingSettings = _get_settings()
 
-    _TRACE_PROVIDER = TracerProvider()
+    _TRACE_PROVIDER = TracerProvider(
+        resource=Resource.create({"service.name": settings.jaeger_service})
+    )
     trace.set_tracer_provider(_TRACE_PROVIDER)
 
     if settings.jaeger_hostname:  # pragma: no cover
-        _JAEGER_EXPORTER = jaeger.JaegerSpanExporter(
-            service_name=settings.jaeger_service,
+        _JAEGER_EXPORTER = JaegerExporter(
             agent_host_name=settings.jaeger_hostname,
             agent_port=settings.jaeger_port,
         )
